@@ -1,10 +1,21 @@
 const express = require("express");
 const { healthCheck } = require("../controllers/health.controller");
+const connectDB = require("../config/db");
 
 const router = express.Router();
 
-// GET /api/health → confirms the API (and DB state) is alive
+// GET /api/health → confirms the API (and DB state) is alive (no DB needed)
 router.get("/health", healthCheck);
+
+// Ensure MongoDB is connected before any data route below (serverless-safe).
+router.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Auth (login, me)
 router.use("/auth", require("./auth.routes"));
