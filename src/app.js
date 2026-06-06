@@ -11,27 +11,32 @@ const app = express();
 // ── CORS ─────────────────────────────────────────────────────────
 // Allow the Next.js client to call this API. CLIENT_URL in .env can be
 // a comma-separated list of allowed origins.
+const stripSlash = (o) => (o || "").replace(/\/+$/, "");
 const allowedOrigins = (
   process.env.CLIENT_URL || "http://localhost:3000,http://localhost:3001"
 )
   .split(",")
-  .map((origin) => origin.trim());
+  .map((origin) => stripSlash(origin.trim()));
 
 app.use(
   cors({
     origin(origin, callback) {
       // Allow non-browser clients (curl/Postman — no Origin header)
       if (!origin) return callback(null, true);
-      // Allow explicitly configured origins
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      const o = stripSlash(origin); // ignore trailing slash differences
+      // Allow explicitly configured origins (CLIENT_URL)
+      if (allowedOrigins.includes(o)) return callback(null, true);
+      // Allow Vercel deploys of the client (production + preview URLs)
+      if (/\.vercel\.app$/.test(o)) return callback(null, true);
       // In development, allow any localhost / 127.0.0.1 port
       if (
         process.env.NODE_ENV !== "production" &&
-        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o)
       ) {
         return callback(null, true);
       }
-      return callback(new Error(`Not allowed by CORS: ${origin}`));
+      // Not allowed — block without throwing (avoids 500 on preflight)
+      return callback(null, false);
     },
     credentials: true,
   })
