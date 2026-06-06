@@ -1,0 +1,40 @@
+{
+  "name": "belalhosan_backend",
+  "version": "1.0.0",
+  "description": "Backend API (Node + Express + MongoDB) for the Belal Hossain Sunny portfolio",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/seed/seedAdmin.js",
+    "seed:services": "node src/seed/seedServices.js",
+    "seed:testimonials": "node src/seed/seedTestimonials.js",
+    "seed:profile": "node src/seed/seedProfile.js",
+    "seed:experience": "node src/seed/seedExperience.js",
+    "seed:blogs": "node src/seed/seedBlogs.js",
+    "seed:projects": "node src/seed/seedProjects.js"
+  },
+  "keywords": [
+    "express",
+    "mongodb",
+    "mongoose",
+    "node",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.3",
+    "morgan": "^1.11.0",
+    "multer": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
